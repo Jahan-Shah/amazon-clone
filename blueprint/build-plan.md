@@ -1,7 +1,7 @@
 # Build Plan: Amazon Clone
 
 - [x] 1. Data model + seed script (Product, Review — core catalog only)
-- [ ] 2. Better Auth setup (Prisma adapter, email/password, generate schema first)
+- [x] 2. Better Auth setup (Prisma adapter, email/password, generate schema first)
 - [ ] 3. Address + Order + OrderItem models, relating to Better Auth's User.id
 - [ ] 4. Homepage + browse/search + filters
 - [ ] 5. Product detail page (gallery, add-to-cart, reviews)
