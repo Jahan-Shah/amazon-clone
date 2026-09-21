@@ -19,6 +19,7 @@ model Product {
   reviewCount Int
   stock       Int
   reviews     Review[]
+  orderItems  OrderItem[]
 }
 
 model Review {
@@ -40,6 +41,8 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  addresses     Address[]
+  orders        Order[]
 
   @@unique([email])
   @@map("user")
@@ -91,4 +94,46 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Address {
+  id     String  @id @default(cuid())
+  userId String
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  line1  String
+  line2  String?
+  city   String
+  state  String
+  zip    String
+  orders Order[]
+
+  @@index([userId])
+}
+
+model Order {
+  id         String      @id @default(cuid())
+  userId     String
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  addressId  String
+  address    Address     @relation(fields: [addressId], references: [id], onDelete: Restrict)
+  status     String
+  totalCents Int
+  createdAt  DateTime    @default(now())
+  items      OrderItem[]
+
+  @@index([userId])
+  @@index([addressId])
+}
+
+model OrderItem {
+  id         String  @id @default(cuid())
+  orderId    String
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  quantity   Int
+  priceCents Int
+
+  @@index([orderId])
+  @@index([productId])
 }
