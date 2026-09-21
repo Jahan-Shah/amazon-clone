@@ -1,0 +1,26 @@
+{
+  "UserPromptSubmit": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "python3 \"$DEVIN_PROJECT_DIR/.devin/capture.py\"",
+          "timeout": 10
+        }
+      ]
+    }
+  ],
+  "Stop": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "python3 \"$DEVIN_PROJECT_DIR/.devin/capture.py\"",
+          "timeout": 10
+        }
+      ]
+    }
+  ]
+}
