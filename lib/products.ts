@@ -60,6 +60,13 @@ export function getProductsByCategory(category: Category) {
   });
 }
 
+export function getProductBySlug(slug: string) {
+  return db.product.findUnique({
+    where: { slug },
+    include: { reviews: true },
+  });
+}
+
 export function searchProducts({ q, category, sort }: SearchParams) {
   const orderBy: Prisma.ProductOrderByWithRelationInput[] =
     sort === "price-asc"
