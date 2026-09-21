@@ -3,7 +3,7 @@
 - [x] 1. Data model + seed script (Product, Review — core catalog only)
 - [x] 2. Better Auth setup (Prisma adapter, email/password, generate schema first)
 - [x] 3. Address + Order + OrderItem models, relating to Better Auth's User.id
-- [ ] 4. Homepage + browse/search + filters
+- [x] 4. Homepage + browse/search + filters
 - [ ] 5. Product detail page (gallery, add-to-cart, reviews)
 - [ ] 6. Cart (Zustand + persist)
 - [ ] 7. Signup/login pages, protected routes, header account dropdown
