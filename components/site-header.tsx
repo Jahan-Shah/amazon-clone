@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { CartLink } from "@/components/cart-link";
+
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-10 bg-[#131921] text-white">
@@ -28,6 +30,7 @@ export function SiteHeader() {
             Search
           </button>
         </form>
+        <CartLink />
       </div>
     </header>
   );

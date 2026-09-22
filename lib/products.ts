@@ -60,6 +60,10 @@ export function getProductsByCategory(category: Category) {
   });
 }
 
+export function getProductsByIds(ids: string[]) {
+  return db.product.findMany({ where: { id: { in: ids } } });
+}
+
 export function getProductBySlug(slug: string) {
   return db.product.findUnique({
     where: { slug },

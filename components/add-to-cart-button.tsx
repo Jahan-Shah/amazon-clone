@@ -11,6 +11,7 @@ interface AddToCartButtonProps {
 
 export function AddToCartButton({ productId, disabled }: AddToCartButtonProps) {
   const add = useCart((s) => s.add);
+  const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
   if (disabled) {
@@ -26,11 +27,33 @@ export function AddToCartButton({ productId, disabled }: AddToCartButtonProps) {
   }
 
   return (
-    <div>
+    <div className="space-y-3">
+      <div className="inline-flex items-center rounded-md border border-zinc-300 bg-white">
+        <button
+          type="button"
+          onClick={() => setQty((q) => Math.max(1, q - 1))}
+          disabled={qty <= 1}
+          aria-label="Decrease quantity"
+          className="px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-100 disabled:cursor-not-allowed disabled:text-zinc-300"
+        >
+          -
+        </button>
+        <span className="min-w-10 px-3 text-center text-sm text-zinc-900">
+          {qty}
+        </span>
+        <button
+          type="button"
+          onClick={() => setQty((q) => q + 1)}
+          aria-label="Increase quantity"
+          className="px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-100"
+        >
+          +
+        </button>
+      </div>
       <button
         type="button"
         onClick={() => {
-          add(productId);
+          add(productId, qty);
           setAdded(true);
         }}
         className="w-full rounded-full bg-[#ffd814] px-6 py-2.5 text-sm font-medium text-zinc-900 hover:bg-[#f7ca00]"
@@ -38,7 +61,7 @@ export function AddToCartButton({ productId, disabled }: AddToCartButtonProps) {
         Add to Cart
       </button>
       {added && (
-        <p role="status" className="mt-2 text-sm font-medium text-[#007600]">
+        <p role="status" className="text-sm font-medium text-[#007600]">
           Added to cart
         </p>
       )}
