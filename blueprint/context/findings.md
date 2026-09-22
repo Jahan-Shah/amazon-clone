@@ -54,3 +54,35 @@
 **Why it matters:** `signOut` awaits `authClient.signOut()` with no try/catch. If the request fails (offline, expired backend, server error), the promise rejects unhandled and `setOpen(false)`, `router.push("/")`, and `router.refresh()` never run - the menu stays open, the user stays signed in, and nothing tells them the click failed. Both forms in this same feature surface failures inline via `role="alert"`, so this is an inconsistent dead-click path on a user action.
 **Suggested fix:** wrap the call in try/catch; on failure still close the menu or show a brief inline error, matching the forms' error pattern.
 **Resolution:**
+
+### F-10 [P3] open - Malformed startCheckout payloads escape the {success:false} contract as unhandled throws
+
+**File:** app/checkout/actions.ts:77-89,124
+**Found:** 2026-09-22 by /audit independent (scope: current; lens: security)
+**Why it matters:** the action validates content but not input shape. `validateAddress(input.address)` calls `.trim()` on each field, so a null `address` or a non-string field throws a TypeError before any result is returned; a non-iterable `items` throws at `for...of`; and `qty` like `"abc"` becomes `NaN` via `Math.floor`, which slips past `qty < 1` (NaN comparisons are false) and past `qty > product.stock`, landing NaN in `totalCents` and `OrderItem.quantity` where Prisma client validation throws inside the transaction. Each path escapes as a thrown server-action error instead of the declared `{ success: false, error }` contract the spec specifies for invalid input. Reachable only via crafted payloads from a signed-in user (server actions are public POST endpoints); impact is a self-inflicted error, not corruption - Prisma rejects NaN before any write and the transaction rolls back.
+**Suggested fix:** guard input shape up front (`input?.address` is an object with string fields, `Array.isArray(input.items)`), require `Number.isInteger(item.qty)` (or `Number.isFinite` after floor) before accumulating, and return `{ success: false, error }` for malformed input.
+**Resolution:**
+
+### F-11 [P3] open - Success page clears the cart before payment is confirmed
+
+**File:** app/checkout/success/page.tsx:34-39, components/clear-cart.tsx:9-11
+**Found:** 2026-09-22 by /audit independent (scope: current; lens: quality)
+**Why it matters:** `<ClearCart />` mounts whenever `redirect_status !== "failed"`, including a `pending` order. A signed-in user can clear their own persisted cart without paying by visiting `/checkout/success?order=<own pending order id>`, and async payment methods that redirect while processing clear the cart before the webhook confirms. The spec goal states "Cart cleared only after a confirmed payment." Impact is limited to the user's own client-side cart, so severity is low.
+**Suggested fix:** render `<ClearCart />` only when `paid || redirectStatus === "succeeded"` so the cart clears on Stripe-confirmed success and post-webhook `paid`, but not on unconfirmed pending visits.
+**Resolution:**
+
+### F-12 [P3] open - Success-page unauthenticated redirect drops the order param
+
+**File:** app/checkout/success/page.tsx:16-18
+**Found:** 2026-09-22 by /audit independent (scope: current; lens: quality)
+**Why it matters:** `redirect("/login?callbackURL=/checkout")` hardcodes the callback, while the proxy path preserves `pathname + search`. This branch fires when a session cookie exists but the session is invalid/expired mid-payment: after login the user lands on `/checkout`, the `?order=` link to their confirmation is lost (no `/orders` page exists until feature 9), and because `ClearCart` never mounted the cart is still populated, so they can unknowingly create and pay for a duplicate order.
+**Suggested fix:** resolve `searchParams` before the session redirect and set `callbackURL` to `/checkout/success?order=<id>` when an order param is present.
+**Resolution:**
+
+### F-13 [P3] open - Address normalization duplicated between validation and persistence
+
+**File:** app/checkout/actions.ts:47-53 vs 116-122
+**Found:** 2026-09-22 by /audit independent (scope: current; lens: quality)
+**Why it matters:** `validateAddress` builds a `trimmed` object (trim, `state` uppercase), then the create payload re-trims/uppercases/null-coerces the same five fields independently. Validation runs against one representation while another is persisted; if a rule drifts (a new field, changed casing, a cap applied in one place), the stored value can escape the validation applied to its twin.
+**Suggested fix:** have `validateAddress` return the normalized address alongside any errors (or hoist normalization into one function) and persist exactly the values that were validated.
+**Resolution:**

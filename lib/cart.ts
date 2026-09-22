@@ -8,6 +8,7 @@ interface CartState {
   add: (productId: string, qty?: number) => void;
   setQty: (productId: string, qty: number) => void;
   remove: (productId: string) => void;
+  clear: () => void;
 }
 
 export const useCart = create<CartState>()(
@@ -40,6 +41,7 @@ export const useCart = create<CartState>()(
           delete items[productId];
           return { items };
         }),
+      clear: () => set({ items: {} }),
     }),
     { name: "amazon-clone-cart" },
   ),
