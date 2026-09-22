@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { AccountMenu } from "@/components/account-menu";
 import { CartLink } from "@/components/cart-link";
 
 export function SiteHeader() {
@@ -30,6 +31,7 @@ export function SiteHeader() {
             Search
           </button>
         </form>
+        <AccountMenu />
         <CartLink />
       </div>
     </header>

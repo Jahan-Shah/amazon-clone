@@ -6,7 +6,7 @@
 - [x] 4. Homepage + browse/search + filters
 - [x] 5. Product detail page (gallery, add-to-cart, reviews)
 - [x] 6. Cart (Zustand + persist)
-- [ ] 7. Signup/login pages, protected routes, header account dropdown
+- [x] 7. Signup/login pages, protected routes, header account dropdown
 - [ ] 8. Checkout (address + Stripe test payment + webhook)
 - [ ] 9. Order history
 - [ ] 10. Polish pass (loading/empty states, mobile, one "better than original" bet)
