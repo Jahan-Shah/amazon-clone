@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { getCartProducts } from "@/app/cart/actions";
+import { CheckoutSkeleton } from "@/components/checkout-skeleton";
 import {
   startCheckout,
   type AddressField,
@@ -188,7 +189,7 @@ export function CheckoutForm() {
   }, [mounted, ids]);
 
   if (!mounted || products === null) {
-    return <p className="mt-6 text-sm text-zinc-500">Loading checkout...</p>;
+    return <CheckoutSkeleton />;
   }
 
   const lines = products

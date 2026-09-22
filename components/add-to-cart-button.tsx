@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { CartDrawer } from "@/components/cart-drawer";
 import { useCart } from "@/lib/cart";
 
 interface AddToCartButtonProps {
@@ -12,7 +13,7 @@ interface AddToCartButtonProps {
 export function AddToCartButton({ productId, disabled }: AddToCartButtonProps) {
   const add = useCart((s) => s.add);
   const [qty, setQty] = useState(1);
-  const [added, setAdded] = useState(false);
+  const [open, setOpen] = useState(false);
 
   if (disabled) {
     return (
@@ -54,17 +55,13 @@ export function AddToCartButton({ productId, disabled }: AddToCartButtonProps) {
         type="button"
         onClick={() => {
           add(productId, qty);
-          setAdded(true);
+          setOpen(true);
         }}
         className="w-full rounded-full bg-[#ffd814] px-6 py-2.5 text-sm font-medium text-zinc-900 hover:bg-[#f7ca00]"
       >
         Add to Cart
       </button>
-      {added && (
-        <p role="status" className="text-sm font-medium text-[#007600]">
-          Added to cart
-        </p>
-      )}
+      <CartDrawer open={open} onClose={() => setOpen(false)} />
     </div>
   );
 }

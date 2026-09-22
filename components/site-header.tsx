@@ -6,14 +6,18 @@ import { CartLink } from "@/components/cart-link";
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-10 bg-[#131921] text-white">
-      <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-3">
+      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-4 px-4 py-3 sm:flex-nowrap">
         <Link
           href="/"
           className="shrink-0 text-lg font-bold tracking-tight text-white hover:outline hover:outline-1 hover:outline-white"
         >
           amazon<span className="text-[#febd69]"> clone</span>
         </Link>
-        <form action="/search" method="get" className="flex min-w-0 flex-1">
+        <form
+          action="/search"
+          method="get"
+          className="order-last mt-2 flex w-full min-w-0 sm:order-none sm:mt-0 sm:w-auto sm:flex-1"
+        >
           <label htmlFor="header-search" className="sr-only">
             Search products
           </label>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { getCartProducts } from "@/app/cart/actions";
+import { CartSkeleton } from "@/components/cart-skeleton";
 import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/format";
 
@@ -37,7 +38,7 @@ export function CartView() {
   }, [mounted, ids]);
 
   if (!mounted || products === null) {
-    return <p className="mt-6 text-sm text-zinc-500">Loading cart...</p>;
+    return <CartSkeleton />;
   }
 
   const lines = products
