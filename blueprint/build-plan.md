@@ -8,5 +8,5 @@
 - [x] 6. Cart (Zustand + persist)
 - [x] 7. Signup/login pages, protected routes, header account dropdown
 - [x] 8. Checkout (address + Stripe test payment + webhook)
-- [ ] 9. Order history
+- [x] 9. Order history
 - [ ] 10. Polish pass (loading/empty states, mobile, one "better than original" bet)

@@ -86,3 +86,11 @@
 **Why it matters:** `validateAddress` builds a `trimmed` object (trim, `state` uppercase), then the create payload re-trims/uppercases/null-coerces the same five fields independently. Validation runs against one representation while another is persisted; if a rule drifts (a new field, changed casing, a cap applied in one place), the stored value can escape the validation applied to its twin.
 **Suggested fix:** have `validateAddress` return the normalized address alongside any errors (or hoist normalization into one function) and persist exactly the values that were validated.
 **Resolution:**
+
+### F-14 [P3] open - Order item-row markup duplicated across three pages
+
+**File:** app/orders/page.tsx:66-88, app/orders/[id]/page.tsx:54-77, app/checkout/success/page.tsx:76-97
+**Found:** 2026-09-22 by /audit independent (scope: current; lens: quality)
+**Why it matters:** feature 9 copied the success page's ~20-line item-row block (thumbnail, clamped title, qty line, line total) into both new order pages; the same JSX now lives in three places and already drifts (the detail row adds a per-unit price the other two lack). Any future fix to this row, such as an empty `images[0]` guard or a layout tweak, must be applied in three spots to stay consistent. Feature 9's own spec showed the shared-component pattern was acceptable by extracting `OrderStatus`.
+**Suggested fix:** extract a small `components/order-item-row.tsx` (accepting `item` plus a `showUnitPrice` flag or similar for the detail variant) and use it in all three pages.
+**Resolution:**
